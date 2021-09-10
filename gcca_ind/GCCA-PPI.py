@@ -82,26 +82,6 @@ import copy
 
 # torch.manual_seed(0)
 
-"""
-The following code is borrowed from BYOL, SelfGNN
-and slightly modified for BGRL
-"""
-
-
-class EMA:
-    def __init__(self, beta, epochs):
-        super().__init__()
-        self.beta = beta
-        self.step = 0
-        self.total_steps = epochs
-
-    def update_average(self, old, new):
-        if old is None:
-            return new
-        beta = 1 - (1 - self.beta) * (np.cos(np.pi * self.step / self.total_steps) + 1) / 2.0
-        self.step += 1
-        return old * beta + (1 - beta) * new
-
 
 def loss_fn(x, y):
     x = F.normalize(x, dim=-1, p=2)
@@ -124,13 +104,6 @@ def singleton(cache_key):
         return wrapper
 
     return inner_fn
-
-
-def update_moving_average(ema_updater, ma_model, current_model):
-    for current_params, ma_params in zip(current_model.parameters(), ma_model.parameters()):
-        old_weight, up_weight = ma_params.data, current_params.data
-        ma_params.data = ema_updater.update_average(old_weight, up_weight)
-
 
 def set_requires_grad(model, val):
     for p in model.parameters():
@@ -160,17 +133,17 @@ class Encoder(torch.nn.Module):
         return h_3
 
 
-class BGRL(nn.Module):
+class GCCA(nn.Module):
 
     def __init__(self, layer_config, dropout=0.0, moving_average_decay=0.99, epochs=1000, **kwargs):
         super().__init__()
-        self.student_encoder = Encoder(layer_config=layer_config)
+        self.encoder = Encoder(layer_config=layer_config)
 
     def embed(self, x, edge_index):
-        return self.student_encoder(x, edge_index).detach()
+        return self.encoder(x, edge_index).detach()
 
     def forward(self, x1, x2, edge_index_v1, edge_index_v2):
-        return self.student_encoder(x1, edge_index_v1), self.student_encoder(x2, edge_index_v2)
+        return self.encoder(x1, edge_index_v1), self.encoder(x2, edge_index_v2)
 
 
 import os
@@ -349,7 +322,7 @@ def eval(model, dataset_train, dataset_test, device=None):
 
 
     for i in range(20):
-        label_classification_inductive(train_emb, train_label, test_emb, test_label, info='BGRL.')
+        label_classification_inductive(train_emb, train_label, test_emb, test_label, info='GCCA.')
 
 
 if __name__ == '__main__':
@@ -357,23 +330,18 @@ if __name__ == '__main__':
     activation = nn.PReLU()
     base_model = SAGEConv
     num_hidden = 512
-    num_enc_long = 4
-    num_enc_short = 3
-    skip_start = 1
-    batch_norm = True
 
     drop_edge_rate_1 = 0.3
     drop_edge_rate_2 = 0.25
     drop_feature_rate_1 = .25
     drop_feature_rate_2 = .0
 
-    tau = .4
     num_epochs = 100
     learning_rate = 0.0001
     weight_decay = 0.00001
 
     print(
-        f"BGRL | dataset:{dataset} | epochs:{num_epochs} | "
+        f"GCCA | dataset:{dataset} | epochs:{num_epochs} | "
         f"drop_rate:{drop_edge_rate_1}-{drop_edge_rate_2}-{drop_feature_rate_1}-{drop_feature_rate_2}")
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -385,7 +353,7 @@ if __name__ == '__main__':
     val_loader = DataLoader(dataset_val, batch_size=2, shuffle=False)
     test_loader = DataLoader(dataset_test, batch_size=2, shuffle=False)
 
-    model = BGRL(layer_config=[dataset_train[0].x.shape[1], num_hidden], epochs=num_epochs).to(device)
+    model = GCCA(layer_config=[dataset_train[0].x.shape[1], num_hidden], epochs=num_epochs).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     best_train = 1e9
@@ -394,9 +362,9 @@ if __name__ == '__main__':
         loss = train(model, train_loader, device)
         if loss < best_train:
             best_train = loss
-            torch.save(model.state_dict(), f'checkpoint/best_{dataset}_BGRL.pkl')
+            torch.save(model.state_dict(), f'checkpoint/best_{dataset}_GCCA.pkl')
 
-    model.load_state_dict(torch.load(f'checkpoint/best_{dataset}_BGRL.pkl'))
+    model.load_state_dict(torch.load(f'checkpoint/best_{dataset}_GCCA.pkl'))
     print('testing...')
     eval(model, train_loader, test_loader, device)
 
