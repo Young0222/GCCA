@@ -9,4 +9,4 @@ For transductive learning, please see 'gcca_trans_citation' (for 'Cora' and 'Cit
 
 For inductive learning, please see 'gcca_ind'.
 
-We only provide 'Cora' dataset in file folder 'dataset_trans' and other datasets can be downloawded  
+We only provide 'Cora' dataset in file folder 'dataset_trans' and other datasets can be downloawded.  
