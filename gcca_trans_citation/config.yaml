@@ -1,0 +1,37 @@
+# GCCA's parameter setup
+Cora:
+  seed: 39788
+  learning_rate: 0.0005
+  num_hidden: 256
+  num_proj_hidden: 256
+  activation: 'relu'
+  base_model: 'GCNConv'
+  num_layers: 2
+  drop_edge_rate_1: 0.2
+  drop_edge_rate_2: 0.4
+  drop_feature_rate_1: 0.3
+  drop_feature_rate_2: 0.4
+  lambd: 0.005
+  xi: 0.05
+  num_epochs: 100
+  weight_decay: 0.00001
+  nmb_prototypes: 50
+
+CiteSeer:
+  seed: 38108
+  learning_rate: 0.001
+  num_hidden: 512
+  num_proj_hidden: 512
+  activation: 'prelu'
+  base_model: 'GCNConv'
+  num_layers: 2
+  drop_edge_rate_1: 0.2
+  drop_edge_rate_2: 0.1
+  drop_feature_rate_1: 0.3
+  drop_feature_rate_2: 0.2
+  lambd: 0.005
+  xi: 0.05
+  num_epochs: 100
+  weight_decay: 0.00001
+  nmb_prototypes: 60
+

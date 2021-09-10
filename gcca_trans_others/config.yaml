@@ -1,0 +1,72 @@
+### GCCA's parameter setting ###
+CS:
+  seed: 39788
+  learning_rate: 0.0000001
+  num_hidden: 512
+  num_proj_hidden: 512
+  activation: 'rrelu'
+  base_model: 'GCNConv'
+  num_layers: 2
+  drop_edge_rate_1: 0.3
+  drop_edge_rate_2: 0.2
+  drop_feature_rate_1: 0.3
+  drop_feature_rate_2: 0.4
+  lambd: 0.005
+  xi: 0.05
+  num_epochs: 100
+  weight_decay: 0.00001
+  nmb_prototypes: 200
+
+Physics:
+  seed: 39788
+  learning_rate: 0.0000001
+  num_hidden: 16
+  num_proj_hidden: 16
+  activation: 'rrelu'
+  base_model: 'GCNConv'
+  num_layers: 2
+  drop_edge_rate_1: 0.4
+  drop_edge_rate_2: 0.1
+  drop_feature_rate_1: 0.1
+  drop_feature_rate_2: 0.4
+  lambd: 0.005
+  xi: 0.05
+  num_epochs: 100
+  weight_decay: 0.00001
+  nmb_prototypes: 185
+
+Photo:
+  seed: 39788
+  learning_rate: 0.0000001
+  num_hidden: 512
+  num_proj_hidden: 512
+  activation: 'rrelu'
+  base_model: 'GCNConv'
+  num_layers: 2
+  drop_edge_rate_1: 0.3
+  drop_edge_rate_2: 0.4
+  drop_feature_rate_1: 0.2
+  drop_feature_rate_2: 0.4
+  lambd: 0.005
+  xi: 0.05
+  num_epochs: 100
+  weight_decay: 0.00001
+  nmb_prototypes: 87  
+
+Computers:
+  seed: 39800
+  learning_rate: 0.0000001
+  num_hidden: 512
+  num_proj_hidden: 512
+  activation: 'rrelu'
+  base_model: 'GCNConv'
+  num_layers: 2
+  drop_edge_rate_1: 0.5
+  drop_edge_rate_2: 0.5
+  drop_feature_rate_1: 0.1
+  drop_feature_rate_2: 0.1
+  lambd: 0.005
+  xi: 0.05
+  num_epochs: 100
+  weight_decay: 0.00001
+  nmb_prototypes: 117 
