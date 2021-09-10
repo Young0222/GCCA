@@ -1,4 +1,7 @@
-# The codes and datasets for "Graph Contrastive Learning with Community Assignment"
+# GCCA
+
+This is the script for "Graph Contrastive Learning with Community Assignment" (submitted to AAAI-2022).
+
 
 For transductive learning, please see 'gcca_trans_citation' (for 'Cora' and 'Citeseer') and 'gcca_trans_others' (for 'CS', 'Computer', 'Photo', 'Physics')
 note that: we use batch process for 'Physics'.
